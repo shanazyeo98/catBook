@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Cat Book"
+        self.title = "Find Your Purrfect Match"
         setupUI()
         setupConstraints()
         configureDataSource()
@@ -111,7 +111,7 @@ class ViewController: UIViewController {
             let contentHeight = scrollView.contentSize.height
             let height = scrollView.frame.size.height
 
-            if offsetY > contentHeight - height * 2 && !isSearching {
+        if offsetY > contentHeight - height * 2 && !searchController.isActive {
                 self.activityIndicator.startAnimating()
                 Task {
                     await fetchUsers()
@@ -124,6 +124,13 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedUser = isSearching ? filteredUsers[indexPath.row] : users[indexPath.row]
+        let detailVC = DetailViewController(user: selectedUser)
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
